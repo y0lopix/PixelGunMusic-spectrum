@@ -1,4 +1,5 @@
 const logoimg = document.getElementById("logoimg");
+let introVideo = document.getElementById("introVideo");
 const canvas = document.getElementById("output");
 const ctx = canvas.getContext("2d");
 
@@ -8,15 +9,14 @@ let gradientEndInput = document.getElementById("gradientEndInput");
 const smoothInput = document.getElementById("smoothInput");
 const endDataInput = document.getElementById("endDataInput");
 
+let showIntro = true;
+
 function drawSpectrum(data) {
 	let h = canvas.height;
 	let w = canvas.width;
 
 	data = data.slice(0, endDataInput.value);
 	data = smooth(data, smoothInput.value);
-
-
-	//data = [255,255,255,0,0,0,0]
 
 	let gradient = ctx.createLinearGradient(1280, 150, 1280, 930);
 	gradient.addColorStop(0, gradientStartColor);
@@ -26,6 +26,10 @@ function drawSpectrum(data) {
 
 	ctx.clearRect(0, 0, w, h);
 
+	// Background
+	if (bgImg)
+		ctx.drawImage(bgImg, 0, 0, 1920, 1080);
+
 	let totalAmplitude = 0;
 	for (let i = 0; i < data.length; i++)
 		totalAmplitude += data[i]
@@ -33,12 +37,10 @@ function drawSpectrum(data) {
 
 	let min = 5;
 	let r = h / ((255 / meanAmplitude) * 5) + h / 4;
-	//let r = h / 4;
-	let offset = r / 100;
 	let cx = w / 2;
 	let cy = h / 2;
 	let point_count = data.length;
-	let percent = (r - offset) / 255;
+	let percent = r/255;
 	let increase = (2 / point_count) * Math.PI;
 
 	ctx.beginPath();
@@ -63,13 +65,14 @@ function drawSpectrum(data) {
 		ctx.lineTo(dx, dy);
 	}
 	ctx.fill();
-	
-
-
 
 	// Logo
 	const borderSize = 16;
 	ctx.drawImage(logoimg, cx - r + borderSize, cy - r + borderSize, r * 2 - borderSize * 2, r * 2 - borderSize * 2);
+
+	// Intro
+	if (showIntro)
+		ctx.drawImage(introVideo, 0, 0, 1920, 1080);
 
 }
 
@@ -87,7 +90,7 @@ var analyser;
 function playAudio() {
 	var file = fileInput.files[0];
 	player.src = URL.createObjectURL(file);
-	player.play();
+	//player.play();
 
 	if (!audioCtx) {
 		audioCtx = new AudioContext();
@@ -122,10 +125,14 @@ function changeSettings() {
 
 }
 
+let bgImg;
+
 function changeBg() {
 	if (document.getElementById("bgInput").value) {
-		var bgFile = document.getElementById("bgInput").files[0];
-		canvas.style.backgroundImage = "url('" + URL.createObjectURL(bgFile) + "')";
+		let bgFile = document.getElementById("bgInput").files[0];
+		//canvas.style.backgroundImage = "url('" + URL.createObjectURL(bgFile) + "')";
+		bgImg = new Image();
+		bgImg.src = URL.createObjectURL(bgFile);
 	}
 }
 
@@ -153,4 +160,43 @@ function smooth(points, margin) {
 		newArr[i] = sum / denom;
 	}
 	return newArr;
+}
+
+function startVideo() {
+	introVideo.play();
+	introVideo.currentTime = 0; // Firefox workaround
+	player.play();
+	//canvas.requestFullscreen();
+	record();
+}
+
+function hideIntro() {
+	showIntro = false;
+}
+
+
+var mediaRecorder;
+
+function record() {
+	let chunks = [];
+	let stream = canvas.captureStream(60);
+	let options = {videoBitsPerSecond: 15000000}
+	mediaRecorder = new MediaRecorder(stream, options);
+    mediaRecorder.start(3);
+
+	mediaRecorder.ondataavailable = function(e) {
+		chunks.push(e.data);
+	};
+
+	mediaRecorder.onstop = function(e) {
+		var blob = new Blob(chunks, { 'type' : mediaRecorder.mimeType });
+		var audioURL = URL.createObjectURL(blob);
+		window.open(audioURL);
+	}
+
+}
+
+function stopRecording() {
+	mediaRecorder.stop();
+	player.pause();
 }

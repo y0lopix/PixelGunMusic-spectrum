@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
-<head><style>#output {height: 480px; background-size:cover; background-repeat:no-repeat;}body,html {margin: 0;padding: 0;}</style></head>
+<head>
+    <style>body,html {margin: 0;padding: 0;}</style>
+    <meta charset="utf-8">
+</head>
 <body>
     <div id="settings">
         <figure>
@@ -57,10 +60,12 @@
         </figure>
        
     </div>
-    <img id="logoimg" src="../Graphics/logo.png" hidden>
+    <img id="logoimg" src="logo.svg" hidden>
+    <video id="introVideo" src="intro.mp4" onended="hideIntro();" hidden></video>
     <audio id="audioplayer" controls></audio>
-    <button onclick="canvas.requestFullscreen();">Fullscreen</button>
-    <canvas id="output" width="1920" height="1080" onclick="togglePlay()"></canvas>
+    <button onclick="startVideo();">START</button>
+    <button onclick="stopRecording();">stop recording</button>
+    <canvas id="output" width="1920" height="1080" onclick="togglePlay()" style="height: 480px; background-size:cover; background-repeat:no-repeat;"></canvas>
     <script src="spectrum.js"></script>
 </body>
 </html>
