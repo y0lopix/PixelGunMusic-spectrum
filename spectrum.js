@@ -182,7 +182,7 @@ function startRecording() {
 	let stream = canvas.captureStream(60);
 	let options = {videoBitsPerSecond: 15000000}
 	mediaRecorder = new MediaRecorder(stream, options);
-    mediaRecorder.start(3);
+	mediaRecorder.start(3);
 
 	mediaRecorder.ondataavailable = function(e) {
 		chunks.push(e.data);
