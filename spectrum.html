@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <style>:root{color-scheme: dark light;}</style>
+    <style>:root{color-scheme: dark light; font-family: sans-serif;}</style>
     <title>Pixel Gun Music Spectrum</title>
 </head>
 <body>
@@ -13,8 +13,13 @@
         </figure>
 
         <figure>
-            <figcaption>Background</figcaption>
+            <figcaption>Background image</figcaption>
             <input id="bgInput" type="file" accept="image/*" onchange="changeBg()">
+        </figure>
+
+        <figure>
+            <figcaption>Background video</figcaption>
+            <input id="bgVideoInput" type="file" accept="video/*" onchange="changeBgVideo()">
         </figure>
 
         <figure>
@@ -65,7 +70,7 @@
        
     </div>
     <img id="logoimg" src="logo.svg" hidden>
-    <video id="introVideo" src="intro.mp4" onended="hideIntro();" hidden></video>
+    <video id="bgVideo" hidden loop muted></video>
     <audio id="audioplayer" controls></audio>
     <button onclick="startVideo();">START</button>
     <button onclick="stopRecording();">stop recording</button>

@@ -1,5 +1,5 @@
 const logoimg = document.getElementById("logoimg");
-let introVideo = document.getElementById("introVideo");
+const bgVideo = document.getElementById("bgVideo");
 const canvas = document.getElementById("output");
 const ctx = canvas.getContext("2d");
 
@@ -9,7 +9,7 @@ let gradientEndInput = document.getElementById("gradientEndInput");
 const smoothInput = document.getElementById("smoothInput");
 const endDataInput = document.getElementById("endDataInput");
 
-let showIntro = true;
+let showIntro = false;
 
 function drawSpectrum(data) {
 	let h = canvas.height;
@@ -18,7 +18,7 @@ function drawSpectrum(data) {
 	data = data.slice(0, endDataInput.value);
 	data = smooth(data, smoothInput.value);
 
-	let gradient = ctx.createLinearGradient(1280, 150, 1280, 930);
+	let gradient = ctx.createLinearGradient(1280, 0, 1280, 1080);
 	gradient.addColorStop(0, gradientStartColor);
 	gradient.addColorStop(1, gradientEndColor);
 	ctx.fillStyle = gradient;
@@ -26,9 +26,9 @@ function drawSpectrum(data) {
 
 	ctx.clearRect(0, 0, w, h);
 
-	// Background
-	if (bgImg)
-		ctx.drawImage(bgImg, 0, 0, 1920, 1080);
+	// Video background
+	if (bgVideo.src)
+		ctx.drawImage(bgVideo, 0, 0, 1920, 1080);
 
 	let totalAmplitude = 0;
 	for (let i = 0; i < data.length; i++)
@@ -70,10 +70,6 @@ function drawSpectrum(data) {
 	const borderSize = 16;
 	ctx.drawImage(logoimg, cx - r + borderSize, cy - r + borderSize, r * 2 - borderSize * 2, r * 2 - borderSize * 2);
 
-	// Intro
-	if (showIntro)
-		ctx.drawImage(introVideo, 0, 0, 1920, 1080);
-
 }
 
 
@@ -90,7 +86,6 @@ var analyser;
 function playAudio() {
 	var file = fileInput.files[0];
 	player.src = URL.createObjectURL(file);
-	//player.play();
 
 	if (!audioCtx) {
 		audioCtx = new AudioContext();
@@ -125,14 +120,18 @@ function changeSettings() {
 
 }
 
-let bgImg;
+function changeBgVideo() {
+	if (document.getElementById("bgVideoInput").value) {
+		const bgVideoFile = document.getElementById("bgVideoInput").files[0];
+		bgVideo.src = URL.createObjectURL(bgVideoFile);
+		bgVideo.play()
+	}
+}
 
 function changeBg() {
 	if (document.getElementById("bgInput").value) {
-		let bgFile = document.getElementById("bgInput").files[0];
-		//canvas.style.backgroundImage = "url('" + URL.createObjectURL(bgFile) + "')";
-		bgImg = new Image();
-		bgImg.src = URL.createObjectURL(bgFile);
+		const bgFile = document.getElementById("bgInput").files[0];
+		canvas.style.backgroundImage = "url('" + URL.createObjectURL(bgFile) + "')";
 	}
 }
 
@@ -163,17 +162,10 @@ function smooth(points, margin) {
 }
 
 function startVideo() {
-	introVideo.play();
-	introVideo.currentTime = 0; // Firefox workaround
+	bgVideo.play();
+	bgVideo.currentTime = 0; // Firefox workaround
 	player.play();
-	//canvas.requestFullscreen();
-	record();
 }
-
-function hideIntro() {
-	showIntro = false;
-}
-
 
 var mediaRecorder;
 
