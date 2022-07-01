@@ -72,8 +72,10 @@
     <img id="logoimg" src="logo.svg" hidden>
     <video id="bgVideo" hidden loop muted></video>
     <audio id="audioplayer" controls></audio>
-    <button onclick="startVideo();">START</button>
-    <button onclick="stopRecording();">stop recording</button>
+    <button onclick="startVideo();">Start</button>
+    <button onclick="stopVideo();">Stop</button>
+    <button onclick="startRecording();">Start recording</button>
+    <button onclick="stopRecording();">Stop recording</button>
     <button onclick="canvas.requestFullscreen(); showBlack = true">Fullscreen</button>
     <canvas id="output" width="1920" height="1080" onclick="startVideo()" style="height: 480px; background-size:cover; background-repeat:no-repeat; background-position: center;"></canvas>
     <script src="spectrum.js"></script>

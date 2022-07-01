@@ -164,12 +164,20 @@ function smooth(points, margin) {
 function startVideo() {
 	bgVideo.play();
 	bgVideo.currentTime = 0; // Firefox workaround
+	player.currentTime = 0;
 	player.play();
+}
+
+function stopVideo() {
+	player.pause();
+	bgVideo.pause();
 }
 
 var mediaRecorder;
 
-function record() {
+function startRecording() {
+	startVideo();
+
 	let chunks = [];
 	let stream = canvas.captureStream(60);
 	let options = {videoBitsPerSecond: 15000000}
@@ -190,5 +198,5 @@ function record() {
 
 function stopRecording() {
 	mediaRecorder.stop();
-	player.pause();
+	stopVideo();
 }
