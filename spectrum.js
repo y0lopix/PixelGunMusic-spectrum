@@ -5,6 +5,7 @@ const ctx = canvas.getContext("2d");
 
 let gradientStartInput = document.getElementById("gradientStartInput");
 let gradientEndInput = document.getElementById("gradientEndInput");
+const opacityInput = document.getElementById("opacityInput")
 
 const smoothInput = document.getElementById("smoothInput");
 const endDataInput = document.getElementById("endDataInput");
@@ -111,8 +112,9 @@ function playAudio() {
 
 function changeSettings() {
 	if (audioCtx) {
-		gradientStartColor = document.getElementById("gradientStartInput").value;
-		gradientEndColor = document.getElementById("gradientEndInput").value;
+		const opacity = parseInt(opacityInput.value).toString(16).padStart(2, '0');
+		gradientStartColor = document.getElementById("gradientStartInput").value + opacity;
+		gradientEndColor = document.getElementById("gradientEndInput").value + opacity;
 		analyser.smoothingTimeConstant = document.getElementById("stcInput").value;
 		analyser.fftSize = document.getElementById("fftInput").value;
 		analyser.minDecibels = document.getElementById("minDbInput").value;
